@@ -9,15 +9,15 @@ import numpy as np
 app = Flask(__name__)
 CORS(app)
 allowed_extensions = {"png", "jpg"}
-min_lat = 36.999301
-max_lat = 37.000198
-min_lon = -122.064474
-max_lon = -122.061568
+min_lat = 36.999431
+max_lat = 37.000129
+min_lon = -122.061619
+max_lon = -122.063929
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
-    
     if 'image' not in request.files:
+        print("No file part in the request")  # Debugging line
         return jsonify({'error': 'No file'}), 400
     
     file = request.files['image']
@@ -25,7 +25,7 @@ def upload_image():
     if file and allowed(file.filename):
         filename, extension = file.filename.split('.')
         new_filename = generate_temp_upload_filename(filename, "." + extension)  
-        print(new_filename)
+        print(f"New filename: {new_filename}")  # Debugging line
         file.save(os.path.join('images/upload', new_filename))
         model = keras.models.load_model("geolocator.keras")
 
@@ -35,11 +35,12 @@ def upload_image():
         predictions = model.predict(image_array)
         predictions = denormalize_predicted_coordinates(predictions, min_lat, max_lat, min_lon, max_lon)[0]
         os.remove(new_filename)
-        print(predictions)
+        print(f"Predictions: {predictions}")  # Debugging line
         return jsonify({'prediction': predictions.tolist()}), 200
     else:
+        print("Invalid file")  # Debugging line
         return jsonify({'error': 'Invalid file'}), 400
-    
+
 def allowed(file_name):
     res = file_name.split('.')
     return True if len(res) == 2 and res[1] in allowed_extensions else False

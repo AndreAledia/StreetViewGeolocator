@@ -2,7 +2,8 @@
 **/.env
 **/__pycache__
 **/geolocator.h5
-**/geolocator.keras
 **/server/images/fixFileName
 /server/images/replace.py
 **/server/images/upload
+server/images/train/*
+server/images/test/*

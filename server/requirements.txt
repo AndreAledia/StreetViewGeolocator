@@ -1,6 +1,6 @@
 flask
 flask-cors
-flaks-executor
+flask-executor
 tensorflow
 pillow
 scipy
